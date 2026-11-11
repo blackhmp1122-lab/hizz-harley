@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Street Glide | Harley-Davidson</title>
-<meta name="description" content="Showcase Harley-Davidson Street Glide: pilih warna, lihat spesifikasi, dan ikuti perjalanannya.">
+<meta name="description" content="Harley-Davidson Street Glide showcase: choose your color, see the specs, and follow the journey.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap">
@@ -57,7 +57,7 @@ h2{font-size:clamp(2.6rem,7vw,5.5rem);margin-bottom:2rem}
 .num{font-stretch:62%;font-weight:800;font-size:clamp(3.4rem,10vw,8rem);line-height:.95;color:var(--accent);transition:color .5s}
 .specs small{display:block;color:var(--mute);font-size:1rem;max-width:22ch}
 
-/* story: video mengikuti scroll */
+/* story: video follows scroll */
 .scene{position:relative;height:320vh}
 .pin{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:flex-end;background:#000}
 .pin video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -86,111 +86,117 @@ footer{padding:2rem 0;color:var(--mute);font-size:.9rem;border-top:1px solid var
 
 <nav>
   <b>Harley-Davidson</b>
-  <ul><li><a href="#perjalanan">Perjalanan</a></li><li><a href="#warna">Warna</a></li><li><a href="#spesifikasi">Spesifikasi</a></li><li><a href="#kontak">Kontak</a></li></ul>
+  <ul><li><a href="#colors">Colors</a></li><li><a href="#journey">Journey</a></li><li><a href="#specs">Specs</a></li><li><a href="#contact">Contact</a></li></ul>
 </nav>
 
-<div id="perjalanan">
-  <article class="scene">
-    <div class="pin">
-      <video data-src="assets/video/malam.mp4" poster="assets/img/malam.webp" muted playsinline preload="auto" tabindex="-1"></video>
-      <div class="wrap cap"><h3 class="display">Malam hujan, lampu kota</h3><p>Aspal basah memantulkan semua cahaya. Lampu depan menyala, mesin berdetak pelan.</p></div>
-      <div class="bar"><i></i></div>
-    </div>
-  </article>
-  <article class="scene r">
-    <div class="pin">
-      <video data-src="assets/video/gurun.mp4" poster="assets/img/gurun.webp" muted playsinline preload="auto" tabindex="-1"></video>
-      <div class="wrap cap"><h3 class="display">Jalan lurus ke matahari</h3><p>Gurun yang panjang dan sepi. Gas ditarik, debu terangkat di belakang.</p></div>
-      <div class="bar"><i></i></div>
-    </div>
-  </article>
-  <article class="scene">
-    <div class="pin">
-      <video data-src="assets/video/gunung.mp4" poster="assets/img/gunung.webp" muted playsinline preload="auto" tabindex="-1"></video>
-      <div class="wrap cap"><h3 class="display">Tikungan pagi di pegunungan</h3><p>Kabut masih turun, udara dingin. Sudut demi sudut tanpa terburu-buru.</p></div>
-      <div class="bar"><i></i></div>
-    </div>
-  </article>
-  <article class="scene r">
-    <div class="pin">
-      <video data-src="assets/video/detail.mp4" poster="assets/img/detail.webp" muted playsinline preload="auto" tabindex="-1"></video>
-      <div class="wrap cap"><h3 class="display">Detail yang terasa</h3><p>Kaca depan berembun, krom dingin, dan lampu yang menyorot jauh ke depan.</p></div>
-      <div class="bar"><i></i></div>
-    </div>
-  </article>
-</div>
+<!-- PAGE 1: rainy night scene (scroll-driven video) -->
+<article class="scene">
+  <div class="pin">
+    <video data-src="assets/video/malam.mp4" poster="assets/img/malam.jpg" muted playsinline preload="auto" tabindex="-1"></video>
+    <div class="wrap cap"><h3 class="display">Rainy night, city lights</h3><p>Wet asphalt reflects every light. Headlamp on, the engine ticking over slowly.</p></div>
+    <div class="bar"><i></i></div>
+  </div>
+</article>
 
+<!-- PAGE 2: big "Street Glide" title -->
 <header class="hero">
-  <video src="assets/video/hero.mp4" poster="assets/img/hitam.webp" autoplay muted loop playsinline></video>
+  <video src="assets/video/hero.mp4" poster="assets/img/hitam.jpg" autoplay muted loop playsinline></video>
   <div class="wrap">
     <h1 class="display">Street Glide</h1>
-    <p>Tourer besar untuk jarak jauh, dengan mesin Milwaukee-Eight dan jalan yang tak habis.</p>
+    <p>A big tourer built for long distances, with the Milwaukee-Eight engine and a road that never ends.</p>
   </div>
 </header>
 
-<section id="warna">
+<!-- PAGE 3: choose your color -->
+<section id="colors">
   <div class="wrap">
-    <h2 class="display">Pilih warnanya</h2>
+    <h2 class="display">Choose your color</h2>
     <div class="stage" id="stage">
-      <img class="on" src="assets/img/hitam.webp" alt="Street Glide hitam">
-      <img src="assets/img/hitam.webp" alt="">
+      <img class="on" src="assets/img/hitam.jpg" alt="Black Street Glide">
+      <img src="assets/img/hitam.jpg" alt="">
     </div>
     <div class="pick">
-      <output id="cname" for="sw" aria-live="polite">Hitam</output>
-      <div class="sw" id="sw" role="group" aria-label="Pilihan warna">
-        <button style="--c:#111" data-n="Hitam" data-i="hitam" data-a="#d8d4cc" aria-pressed="true" aria-label="Hitam"></button>
-        <button style="--c:#9c1c1c" data-n="Merah" data-i="merah" data-a="#e5473b" aria-pressed="false" aria-label="Merah"></button>
-        <button style="--c:#b8764a" data-n="Tembaga" data-i="tembaga" data-a="#e09a68" aria-pressed="false" aria-label="Tembaga"></button>
-        <button style="--c:#f1f1ee" data-n="Putih" data-i="putih" data-a="#f4f1ea" aria-pressed="false" aria-label="Putih"></button>
-        <button style="--c:#1c3f8f" data-n="Biru" data-i="biru" data-a="#5b86ea" aria-pressed="false" aria-label="Biru"></button>
+      <output id="cname" for="sw" aria-live="polite">Black</output>
+      <div class="sw" id="sw" role="group" aria-label="Color options">
+        <button style="--c:#111" data-n="Black" data-i="hitam" data-a="#d8d4cc" aria-pressed="true" aria-label="Black"></button>
+        <button style="--c:#9c1c1c" data-n="Red" data-i="merah" data-a="#e5473b" aria-pressed="false" aria-label="Red"></button>
+        <button style="--c:#b8764a" data-n="Copper" data-i="tembaga" data-a="#e09a68" aria-pressed="false" aria-label="Copper"></button>
+        <button style="--c:#f1f1ee" data-n="White" data-i="putih" data-a="#f4f1ea" aria-pressed="false" aria-label="White"></button>
+        <button style="--c:#1c3f8f" data-n="Blue" data-i="biru" data-a="#5b86ea" aria-pressed="false" aria-label="Blue"></button>
       </div>
     </div>
   </div>
 </section>
 
-<section class="specs" id="spesifikasi">
+<!-- PAGE 4 onward: the rest of the journey (scroll-driven videos) -->
+<div id="journey">
+  <article class="scene r">
+    <div class="pin">
+      <video data-src="assets/video/gurun.mp4" poster="assets/img/gurun.jpg" muted playsinline preload="auto" tabindex="-1"></video>
+      <div class="wrap cap"><h3 class="display">A straight road into the sun</h3><p>A long, empty desert. Twist the throttle and the dust lifts behind you.</p></div>
+      <div class="bar"><i></i></div>
+    </div>
+  </article>
+  <article class="scene">
+    <div class="pin">
+      <video data-src="assets/video/gunung.mp4" poster="assets/img/gunung.jpg" muted playsinline preload="auto" tabindex="-1"></video>
+      <div class="wrap cap"><h3 class="display">Morning curves in the mountains</h3><p>Fog still drifting down, the air cold. Corner after corner, no rush.</p></div>
+      <div class="bar"><i></i></div>
+    </div>
+  </article>
+  <article class="scene r">
+    <div class="pin">
+      <video data-src="assets/video/detail.mp4" poster="assets/img/detail.jpg" muted playsinline preload="auto" tabindex="-1"></video>
+      <div class="wrap cap"><h3 class="display">Details you can feel</h3><p>Dewy windshield, cold chrome, and a headlamp reaching far down the road.</p></div>
+      <div class="bar"><i></i></div>
+    </div>
+  </article>
+</div>
+
+<section class="specs" id="specs">
   <div class="wrap">
-    <!-- Ganti angka di bawah sesuai spesifikasi resmi tipe/tahun motor Anda -->
-    <div><span class="num" data-to="1868" data-fmt="id">0</span><small>cc kapasitas mesin Milwaukee-Eight</small></div>
-    <div><span class="num" data-to="6">0</span><small>percepatan transmisi Cruise Drive</small></div>
-    <div><span class="num" data-to="22.7" data-dec="1">0</span><small>liter kapasitas tangki bensin</small></div>
+    <!-- Change the numbers below to match the official specs of your model/year -->
+    <div><span class="num" data-to="1868" data-fmt="1">0</span><small>cc Milwaukee-Eight engine displacement</small></div>
+    <div><span class="num" data-to="6">0</span><small>speeds in the Cruise Drive transmission</small></div>
+    <div><span class="num" data-to="22.7" data-dec="1">0</span><small>liters of fuel tank capacity</small></div>
   </div>
 </section>
 
-<section class="cta" id="kontak">
-  <img src="assets/img/belakang.webp" alt="" loading="lazy">
+<section class="cta" id="contact">
+  <img src="assets/img/belakang.jpg" alt="" loading="lazy">
   <div class="wrap">
-    <h2 class="display">Siap berkendara?</h2>
-    <!-- Ganti 62XXXXXXXXXX dengan nomor WhatsApp Anda (format 62812...) -->
-    <a class="btn" href="https://wa.me/62XXXXXXXXXX?text=Halo%2C%20saya%20tertarik%20dengan%20Street%20Glide" id="wa">Tanya lewat WhatsApp</a>
+    <h2 class="display">Ready to ride?</h2>
+    <!-- Replace 62XXXXXXXXXX with your WhatsApp number (format 62812...) -->
+    <a class="btn" href="https://wa.me/62XXXXXXXXXX?text=Hello%2C%20I%27m%20interested%20in%20the%20Street%20Glide" id="wa">Ask on WhatsApp</a>
   </div>
 </section>
 
-<footer><div class="wrap">Street Glide showcase. Nama dan merek Harley-Davidson adalah milik pemiliknya.</div></footer>
+<footer><div class="wrap">Street Glide showcase. Harley-Davidson names and trademarks belong to their respective owners.</div></footer>
 
 <script>
 (function(){
 var root=document.documentElement,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var EXT='jpg'; // image format on GitHub
 
-// konfigurator warna: crossfade foto + ganti warna aksen halaman
+// color configurator: crossfade photo + change page accent color
 var imgs=[].slice.call(document.querySelectorAll('#stage img')),cur=0,btns=[].slice.call(document.querySelectorAll('#sw button')),cname=document.getElementById('cname');
 btns.forEach(function(b){b.addEventListener('click',function(){
   btns.forEach(function(x){x.setAttribute('aria-pressed',x===b)});
-  var nxt=imgs[1-cur];nxt.src='assets/img/'+b.dataset.i+'.webp';nxt.alt='Street Glide '+b.dataset.n.toLowerCase();
+  var nxt=imgs[1-cur];nxt.src='assets/img/'+b.dataset.i+'.'+EXT;nxt.alt=b.dataset.n+' Street Glide';
   nxt.classList.add('on');imgs[cur].classList.remove('on');cur=1-cur;
   cname.textContent=b.dataset.n;root.style.setProperty('--accent',b.dataset.a);
 })});
 
-// angka spesifikasi naik saat terlihat
+// spec numbers count up when visible
 var nums=document.querySelectorAll('.num');
-function fmt(n,el){var d=+el.dataset.dec||0,s=n.toFixed(d);return el.dataset.fmt?Math.round(n).toLocaleString('id-ID'):s.replace('.',',')}
+function fmt(n,el){var d=+el.dataset.dec||0;return el.dataset.fmt?Math.round(n).toLocaleString('en-US'):n.toFixed(d)}
 var io=new IntersectionObserver(function(es){es.forEach(function(e){
   if(!e.isIntersecting)return;io.unobserve(e.target);var el=e.target,to=+el.dataset.to,t0=performance.now(),D=reduce?1:1400;
   (function tick(t){var p=Math.min((t-t0)/D,1),v=to*(1-Math.pow(1-p,3));el.textContent=fmt(v,el);if(p<1)requestAnimationFrame(tick)})(t0);
 })},{threshold:.6});
 nums.forEach(function(n){io.observe(n)});
 
-// perjalanan: posisi scroll = posisi video
+// journey: scroll position = video position
 var scenes=[].slice.call(document.querySelectorAll('.scene')).map(function(el){
   var v=el.querySelector('video');return{el:el,v:v,cap:el.querySelector('.cap'),bar:el.querySelector('.bar i'),p:0,t:0,on:false}});
 var lio=new IntersectionObserver(function(es){es.forEach(function(e){
