@@ -60,7 +60,7 @@ h2{font-size:clamp(2.6rem,7vw,5.5rem);margin-bottom:2rem}
 /* story: video follows scroll */
 .scene{position:relative;height:320vh}
 .pin{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:flex-end;background:#000}
-.pin video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pin video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:translateZ(0);will-change:contents}
 .pin::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 40%,#0b0b0ccc)}
 .cap{position:relative;z-index:2;width:100%;padding-bottom:clamp(3rem,10vh,6rem);opacity:0;transform:translateY(24px)}
 .cap h3{font-size:clamp(3rem,10vw,8rem)}
@@ -235,22 +235,47 @@ var io=new IntersectionObserver(function(es){es.forEach(function(e){
 })},{threshold:.6});
 nums.forEach(function(n){io.observe(n)});
 
-// journey: scroll position = video position
+/* =====================================================================
+   SCROLL VIDEOS (smooth version)
+   1) Each video is downloaded fully into memory first (blob), so seeking
+      is local and instant instead of asking GitHub for data every time.
+   2) Position is smoothed by elapsed time, so it feels the same at any FPS.
+   3) A new seek is only sent after the previous one has finished.
+   ===================================================================== */
 var scenes=[].slice.call(document.querySelectorAll('.scene')).map(function(el){
-  var v=el.querySelector('video');return{el:el,v:v,cap:el.querySelector('.cap'),bar:el.querySelector('.bar i'),p:0,t:0,on:false}});
+  var v=el.querySelector('video');
+  return{el:el,v:v,cap:el.querySelector('.cap'),bar:el.querySelector('.bar i'),p:0,on:false,ready:false}});
+
+// preload videos one by one, in page order
+var queue=scenes.slice();
+function loadNext(){
+  var sc=queue.shift();if(!sc)return;
+  function ok(src){sc.v.src=src;sc.v.load();sc.ready=true;loadNext()}
+  fetch(sc.v.dataset.src).then(function(r){if(!r.ok)throw 0;return r.blob()})
+    .then(function(b){ok(URL.createObjectURL(b))})
+    .catch(function(){ok(sc.v.dataset.src)}); // fallback: normal streaming
+}
+loadNext();
+
 var lio=new IntersectionObserver(function(es){es.forEach(function(e){
-  var sc=scenes.filter(function(x){return x.el===e.target})[0];sc.on=e.isIntersecting;
-  if(e.isIntersecting&&!sc.v.src){sc.v.src=sc.v.dataset.src;sc.v.load()}
+  scenes.forEach(function(sc){if(sc.el===e.target)sc.on=e.isIntersecting});
 })},{rootMargin:'100% 0px'});
 scenes.forEach(function(sc){lio.observe(sc.el)});
+
 function clamp(x){return Math.max(0,Math.min(1,x))}
-function frame(){
-  var vh=innerHeight;
+var last=performance.now();
+function frame(now){
+  var dt=Math.min((now-last)/1000,.1);last=now;
+  var vh=innerHeight,k=reduce?1:1-Math.exp(-dt*9); // time-based easing
   scenes.forEach(function(sc){
     if(!sc.on)return;
-    var r=sc.el.getBoundingClientRect(),p=clamp(-r.top/(r.height-vh)),v=sc.v;
-    sc.p+=(p-sc.p)*(reduce?1:.14);
-    if(v.readyState>=1&&v.duration){var t=sc.p*(v.duration-.05);if(Math.abs(t-v.currentTime)>.012)v.currentTime=t}
+    var r=sc.el.getBoundingClientRect(),target=clamp(-r.top/(r.height-vh)),v=sc.v;
+    sc.p+=(target-sc.p)*k;
+    if(Math.abs(target-sc.p)<.0004)sc.p=target;
+    if(sc.ready&&v.readyState>=1&&v.duration&&!v.seeking){
+      var t=sc.p*(v.duration-.05);
+      if(Math.abs(t-v.currentTime)>.005)v.currentTime=t;
+    }
     sc.bar.style.transform='scaleX('+sc.p+')';
     var a=clamp((sc.p-.06)/.14)*clamp((.94-sc.p)/.14);
     sc.cap.style.opacity=a;sc.cap.style.transform='translateY('+(24*(1-a))+'px)';
@@ -258,6 +283,7 @@ function frame(){
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
+
 var hero=document.querySelector('.hero');
 new IntersectionObserver(function(es,o){if(es[0].isIntersecting){hero.classList.add('go');o.disconnect()}},{threshold:.4}).observe(hero);
 if(reduce)hero.querySelector('video').pause();
