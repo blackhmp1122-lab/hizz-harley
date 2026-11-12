@@ -25,8 +25,9 @@ nav b{font-stretch:62%;font-weight:800;font-size:1.35rem;letter-spacing:.02em}
 nav ul{display:flex;gap:1.6rem;list-style:none;padding:0;font-size:.95rem}
 nav a{text-decoration:none;opacity:.85}nav a:hover{opacity:1;color:var(--accent)}
 
-/* ================= HERO: "lights on" reveal ================= */
-.hero{position:relative;height:100vh;min-height:560px;display:flex;align-items:flex-end;overflow:hidden;background:#000}
+/* ============ HERO: "lights on" reveal driven by scroll ============ */
+.hs{position:relative;height:300vh}
+.hero{position:sticky;top:0;height:100vh;min-height:560px;display:flex;align-items:flex-end;overflow:hidden;background:#000}
 .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.05) saturate(.2) contrast(1.15)}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 45%,var(--bg) 98%)}
 .hero .wrap{position:relative;z-index:2;width:100%;padding-bottom:clamp(2rem,6vh,4rem)}
@@ -39,36 +40,16 @@ nav a{text-decoration:none;opacity:.85}nav a:hover{opacity:1;color:var(--accent)
 /* light sweep across the bike */
 .sheen{background:linear-gradient(105deg,transparent 42%,#ffffff40 50%,transparent 58%);mix-blend-mode:screen;transform:translateX(-100%);opacity:0}
 
-/* title letters + text */
+/* title + text (values are driven by scroll in JS) */
 .ch{display:inline-block;white-space:pre;opacity:0;transform:translateY(.18em);filter:blur(14px)}
-.hero h1{font-size:clamp(4.5rem,19vw,17rem);position:relative}
+.hero h1{--g:0;font-size:clamp(4.5rem,19vw,17rem);position:relative;
+  text-shadow:0 0 calc(.12em*var(--g)) rgb(255 255 255/calc(.6*var(--g))),0 0 calc(.45em*var(--g)) rgb(185 200 255/calc(.5*var(--g)))}
 .hero p{max-width:34ch;color:var(--mute);margin-top:1rem;font-size:1.15rem;opacity:0;transform:translateY(10px)}
 
-/* timeline: starts when .lit is added */
-.hero.lit video{animation:lightup 2.6s linear forwards}
-.hero.lit .spot{animation:fadeIn 1.2s 1s ease-out forwards}
-.hero.lit .tubes i{animation:tube 1.8s var(--d,0s) step-end forwards}
-.hero.lit .sheen{animation:sheen 1.8s 1.9s ease-in-out forwards}
-.hero.lit .ch{animation:chIn .9s calc(1.5s + var(--i)*65ms) cubic-bezier(.2,.7,.2,1) forwards}
-.hero.lit h1{animation:glow 2.4s 2.4s ease-out forwards}
-.hero.lit p{animation:pIn .9s 2.7s ease-out forwards}
-
-@keyframes lightup{
- 0%,12%{filter:brightness(.05) saturate(.2) contrast(1.15)}
- 14%{filter:brightness(.45) saturate(.5) contrast(1.1)}
- 17%{filter:brightness(.08) saturate(.2) contrast(1.15)}
- 24%{filter:brightness(.6) saturate(.7) contrast(1.08)}
- 27%{filter:brightness(.15) saturate(.3) contrast(1.12)}
- 36%{filter:brightness(.8) saturate(.9) contrast(1.05)}
- 40%{filter:brightness(.35) saturate(.5) contrast(1.1)}
- 52%{filter:brightness(1) saturate(1) contrast(1)}
- 100%{filter:brightness(1.1) saturate(1.05) contrast(1)}}
-@keyframes tube{0%{opacity:0}8%{opacity:1}16%{opacity:.15}24%{opacity:1}34%{opacity:.3}46%{opacity:1}100%{opacity:1}}
-@keyframes fadeIn{to{opacity:1}}
-@keyframes sheen{0%{transform:translateX(-100%);opacity:1}100%{transform:translateX(100%);opacity:1}}
-@keyframes chIn{to{opacity:1;transform:none;filter:blur(0)}}
-@keyframes glow{0%{text-shadow:0 0 0 #fff0}35%{text-shadow:0 0 .12em #fff9,0 0 .45em #b9c8ff88}100%{text-shadow:0 0 .08em #ffffff40,0 0 .4em #b9c8ff40}}
-@keyframes pIn{to{opacity:1;transform:none}}
+/* scroll cue */
+.cue{position:absolute;left:50%;bottom:clamp(1.2rem,3vh,2rem);transform:translateX(-50%);z-index:3;font-size:.8rem;letter-spacing:.3em;text-transform:uppercase;color:var(--mute);text-align:center;pointer-events:none}
+.cue::after{content:"";display:block;width:1px;height:36px;margin:.6rem auto 0;background:linear-gradient(var(--mute),transparent);animation:cue 1.6s ease-in-out infinite;transform-origin:top}
+@keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(0);transform-origin:bottom}}
 
 /* color */
 section{padding:clamp(4rem,10vw,8rem) 0}
@@ -112,14 +93,7 @@ h2{font-size:clamp(2.6rem,7vw,5.5rem);margin-bottom:2rem}
 footer{padding:2rem 0;color:var(--mute);font-size:.9rem;border-top:1px solid var(--line)}
 
 @media(max-width:700px){nav ul{display:none}.specs .wrap{grid-template-columns:1fr}.scene.r .cap{text-align:left}.scene.r .cap p{margin-left:0}}
-@media(prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}.stage img{transition:none}
-  .hero video,.hero.lit video{animation:none!important;filter:none!important}
-  .ch,.hero p{animation:none!important;opacity:1!important;transform:none!important;filter:none!important}
-  .tubes i{animation:none!important;opacity:1!important}
-  .spot{animation:none!important;opacity:1!important}
-  .sheen{display:none}
-}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.stage img{transition:none}.hs{height:100vh}.cue{display:none}}
 </style>
 </head>
 <body>
@@ -129,21 +103,24 @@ footer{padding:2rem 0;color:var(--mute);font-size:.9rem;border-top:1px solid var
   <ul><li><a href="#colors">Colors</a></li><li><a href="#specs">Specs</a></li><li><a href="#journey">Journey</a></li><li><a href="#contact">Contact</a></li></ul>
 </nav>
 
-<!-- PAGE 1: big "Street Glide" with lights-on reveal -->
-<header class="hero">
-  <video data-v="hero" data-p="black" autoplay muted loop playsinline></video>
-  <div class="fx spot"></div>
-  <div class="fx tubes" aria-hidden="true">
-    <i style="--l:5%;--w:13%;--t:13vh;--d:.1s"></i>
-    <i style="--l:23%;--w:9%;--t:15vh;--d:.35s"></i>
-    <i style="--l:40%;--w:18%;--t:12vh;--d:.2s"></i>
-    <i style="--l:64%;--w:11%;--t:14vh;--d:.5s"></i>
-    <i style="--l:80%;--w:15%;--t:13vh;--d:.3s"></i>
-  </div>
-  <div class="fx sheen"></div>
-  <div class="wrap">
-    <h1 class="display" id="title">Street Glide</h1>
-    <p>A big tourer built for long distances, with the Milwaukee-Eight engine and a road that never ends.</p>
+<!-- PAGE 1: big "Street Glide", lights turn on as you scroll -->
+<header class="hs" id="top">
+  <div class="hero">
+    <video data-v="hero" data-p="black" autoplay muted loop playsinline></video>
+    <div class="fx spot"></div>
+    <div class="fx tubes" aria-hidden="true">
+      <i data-o="0" style="--l:5%;--w:13%;--t:13vh"></i>
+      <i data-o=".05" style="--l:23%;--w:9%;--t:15vh"></i>
+      <i data-o=".02" style="--l:40%;--w:18%;--t:12vh"></i>
+      <i data-o=".08" style="--l:64%;--w:11%;--t:14vh"></i>
+      <i data-o=".04" style="--l:80%;--w:15%;--t:13vh"></i>
+    </div>
+    <div class="fx sheen"></div>
+    <div class="wrap">
+      <h1 class="display" id="title">Street Glide</h1>
+      <p id="heroP">A big tourer built for long distances, with the Milwaukee-Eight engine and a road that never ends.</p>
+    </div>
+    <div class="cue" id="cue">Scroll</div>
   </div>
 </header>
 
@@ -265,23 +242,6 @@ function U(f){return encodeURI(f)} // makes names with spaces safe
 });
 document.getElementById('rear').src=U(FILES.photos.rear);
 
-// hero title: split into letters for the reveal
-var h1=document.getElementById('title'),txt=h1.textContent;
-h1.setAttribute('aria-label',txt);h1.textContent='';
-txt.split('').forEach(function(c,i){
-  var s=document.createElement('span');s.className='ch';s.setAttribute('aria-hidden','true');
-  s.style.setProperty('--i',i);s.textContent=c;h1.appendChild(s);
-});
-
-// hero: lights turn on when visible, and replay when you come back to the top
-var hero=document.querySelector('.hero'),heroTimer;
-function lightOn(){clearTimeout(heroTimer);heroTimer=setTimeout(function(){hero.classList.add('lit')},350)}
-new IntersectionObserver(function(es){es.forEach(function(e){
-  if(e.intersectionRatio>=.35)lightOn();
-  else if(e.intersectionRatio===0){clearTimeout(heroTimer);hero.classList.remove('lit')}
-})},{threshold:[0,.35]}).observe(hero);
-if(reduce)hero.querySelector('video').pause();
-
 // color configurator: crossfade photo + change page accent color
 var imgs=[].slice.call(document.querySelectorAll('#stage img')),cur=0,btns=[].slice.call(document.querySelectorAll('#sw button')),cname=document.getElementById('cname');
 imgs[0].src=imgs[1].src=U(FILES.colors.black);
@@ -300,6 +260,61 @@ var io=new IntersectionObserver(function(es){es.forEach(function(e){
   (function tick(t){var p=Math.min((t-t0)/D,1),v=to*(1-Math.pow(1-p,3));el.textContent=fmt(v,el);if(p<1)requestAnimationFrame(tick)})(t0);
 })},{threshold:.6});
 nums.forEach(function(n){io.observe(n)});
+
+function clamp(x){return Math.max(0,Math.min(1,x))}
+function lerpKF(kf,x){ // linear interpolation through [[x,value],...]
+  if(x<=kf[0][0])return kf[0][1];
+  for(var i=1;i<kf.length;i++){
+    if(x<=kf[i][0]){var a=kf[i-1],b=kf[i];return a[1]+(b[1]-a[1])*(x-a[0])/(b[0]-a[0])}
+  }
+  return kf[kf.length-1][1];
+}
+
+/* =====================================================================
+   HERO (page 1): the whole "lights on" effect is driven by scroll.
+   hp = 0 (dark) ... 1 (fully lit). Timeline:
+     0.00-0.45  motor flickers on, light tubes flicker
+     0.22-0.42  studio light fades in
+     0.42-0.80  title letters appear one by one
+     0.55-0.80  light sweep across the bike
+     0.72-0.90  title glow
+     0.78-0.90  subtitle fades in
+   ===================================================================== */
+var h1=document.getElementById('title'),txt=h1.textContent;
+h1.setAttribute('aria-label',txt);h1.textContent='';
+var letters=txt.split('').map(function(c){
+  var s=document.createElement('span');s.className='ch';s.setAttribute('aria-hidden','true');
+  s.textContent=c;h1.appendChild(s);return s;
+});
+var hs=document.querySelector('.hs'),hv=hs.querySelector('video'),spot=hs.querySelector('.spot'),sheen=hs.querySelector('.sheen'),
+    heroP=document.getElementById('heroP'),cue=document.getElementById('cue'),
+    tubes=[].map.call(hs.querySelectorAll('.tubes i'),function(el){return{el:el,o:+el.dataset.o||0}});
+var BR=[[0,.05],[.054,.05],[.063,.45],[.077,.08],[.108,.6],[.122,.15],[.162,.8],[.18,.35],[.234,1],[.45,1.1]];
+var TB=[[0,0],[.02,1],[.04,.15],[.06,1],[.085,.3],[.115,1]];
+var hp=0,lastHp=-1;
+function heroFrame(k){
+  var r=hs.getBoundingClientRect(),vh=innerHeight;
+  if(r.bottom<-50)return; // scrolled far past the hero
+  var target=reduce?1:clamp(-r.top/(r.height-vh));
+  hp+=(target-hp)*k;if(Math.abs(target-hp)<.0004)hp=target;
+  if(hp===lastHp)return;lastHp=hp;
+
+  var b=lerpKF(BR,hp);
+  hv.style.filter='brightness('+b.toFixed(3)+') saturate('+Math.min(1.05,.2+b*.85).toFixed(3)+') contrast('+(1.15-.15*Math.min(b,1)).toFixed(3)+')';
+  tubes.forEach(function(t){t.el.style.opacity=lerpKF(TB,hp-t.o).toFixed(3)});
+  spot.style.opacity=clamp((hp-.22)/.2);
+  var s=clamp((hp-.55)/.25);
+  sheen.style.transform='translateX('+(-100+200*s)+'%)';sheen.style.opacity=(s>0&&s<1)?1:0;
+  letters.forEach(function(el,i){
+    var lp=clamp((hp-(.42+i*.022))/.14);lp=1-Math.pow(1-lp,3);
+    el.style.opacity=lp;el.style.transform='translateY('+((1-lp)*.18)+'em)';
+    el.style.filter=lp>=1?'none':'blur('+((1-lp)*14).toFixed(1)+'px)';
+  });
+  h1.style.setProperty('--g',clamp((hp-.72)/.18).toFixed(3));
+  var pp=clamp((hp-.78)/.12);heroP.style.opacity=pp;heroP.style.transform='translateY('+(10*(1-pp))+'px)';
+  cue.style.opacity=1-clamp(hp/.05);
+}
+if(reduce)hv.pause();
 
 /* =====================================================================
    SCROLL VIDEOS (smooth version)
@@ -328,11 +343,11 @@ var lio=new IntersectionObserver(function(es){es.forEach(function(e){
 })},{rootMargin:'100% 0px'});
 scenes.forEach(function(sc){lio.observe(sc.el)});
 
-function clamp(x){return Math.max(0,Math.min(1,x))}
 var last=performance.now();
 function frame(now){
   var dt=Math.min((now-last)/1000,.1);last=now;
   var vh=innerHeight,k=reduce?1:1-Math.exp(-dt*9); // time-based easing
+  heroFrame(k);
   scenes.forEach(function(sc){
     if(!sc.on)return;
     var r=sc.el.getBoundingClientRect(),target=clamp(-r.top/(r.height-vh)),v=sc.v;
